@@ -1,4 +1,5 @@
 import axios, { CreateAxiosDefaults } from 'axios'
+import Cookies from 'js-cookie'
 
 import { API_URL } from '@/constants/constants'
 
@@ -7,7 +8,22 @@ const options: CreateAxiosDefaults = {
 	headers: {
 		'Content-Type': 'application/json'
 	},
-	timeout: 10000
+	withCredentials: true
 }
 
-export const axiosClassic = axios.create(options)
+const axiosClassic = axios.create(options)
+
+axiosClassic.interceptors.request.use(
+	options => {
+		const token = Cookies.get('accessToken')
+		if (token) {
+			options.headers.Authorization = `Bearer ${token}`
+		}
+		return options
+	},
+	error => {
+		return console.log(error)
+	}
+)
+
+export default axiosClassic
