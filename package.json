@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.62.8",
+		"@tanstack/react-query-devtools": "^5.62.11",
 		"axios": "^1.7.9",
 		"clsx": "^2.1.1",
 		"framer-motion": "^11.15.0",
@@ -20,9 +21,10 @@
 		"react-dom": "^19.0.0",
 		"react-google-recaptcha": "^3.1.0",
 		"react-hook-form": "^7.54.1",
-		"react-toast": "^1.0.3",
+		"react-toastify": "^11.0.2",
 		"sass": "^1.83.0",
-		"tailwind-merge": "^2.6.0"
+		"tailwind-merge": "^2.6.0",
+		"zustand": "^5.0.2"
 	},
 	"devDependencies": {
 		"typescript": "^5",

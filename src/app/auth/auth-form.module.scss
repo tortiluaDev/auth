@@ -1,5 +1,8 @@
 .auth {
 	@apply flex flex-col w-2/6 text-center mx-auto my-52 border border-primary py-20 min-w-[345px] max-w-[720px];
+	.error {
+		@apply block mb-4 text-xs text-red-500 font-bold;
+	}
 	> p {
 		@apply text-3xl mb-8;
 	}
@@ -15,10 +18,10 @@
 	> form {
 		@apply flex flex-col items-center mt-12;
 		> .inp1 {
-			@apply w-2/3 block mb-6 bg-transparent border-primary border-2 outline-none pl-4 py-2 text-lg font-semibold focus:border-primaryActive transition;
+			@apply w-2/3 block mb-6 bg-transparent border-primary border-2 outline-none px-4 py-2 text-lg font-semibold focus:border-primaryActive transition;
 		}
 		> .inp2 {
-			@apply w-2/3 block mb-12 bg-transparent border-primary border-2 outline-none pl-4 py-2 text-lg font-semibold focus:border-primaryActive transition;
+			@apply w-2/3 block mb-12 bg-transparent border-primary border-2 outline-none px-4 py-2 text-lg font-semibold focus:border-primaryActive transition;
 		}
 		> button {
 			@apply bg-primary text-xl font-semibold py-2 w-2/3 hover:bg-primaryActive transition;
