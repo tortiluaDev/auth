@@ -1,8 +1,8 @@
 import axios, { CreateAxiosDefaults, isAxiosError } from 'axios'
 import Cookies from 'js-cookie'
+import { redirect } from 'next/navigation'
 
 import { API_URL } from '@/constants/constants'
-import { PAGE } from '@/constants/pages.constants'
 
 import { authService } from '@/services/auth.service'
 
@@ -16,18 +16,15 @@ const options: CreateAxiosDefaults = {
 
 const axiosClassic = axios.create(options)
 
-const accessToken = Cookies.get('accessToken')
-
 async function refreshTokenFn() {
+	const accessToken = Cookies.get('accessToken')
 	if (typeof accessToken === 'string') {
 		const res = await authService.refresh()
 		if (res.data?.accessToken) {
 			Cookies.set('accessToken', res.data?.accessToken)
 			console.log('new access token!')
-			setTimeout(() => {
-				authService.privateRoute()
-				console.log('Запрос на получение доступа к странице отправлен')
-			}, 400)
+			authService.privateRoute()
+			console.log('Запрос на получение доступа к странице отправлен')
 			return true
 		} else {
 			console.log(`Error: ${res}. \nAccess token has not been replaced`)
@@ -37,6 +34,7 @@ async function refreshTokenFn() {
 }
 
 axiosClassic.interceptors.request.use(config => {
+	const accessToken = Cookies.get('accessToken')
 	if (window.location.pathname === '/account' && accessToken) {
 		config.headers.Authorization = `Bearer ${accessToken}`
 		return config
@@ -58,17 +56,15 @@ axiosClassic.interceptors.response.use(
 						return res
 					})
 					.then(isTokenUpdated => {
-						if (isTokenUpdated) window.location.reload()
-						else console.log('Ошибка, страница не перезагрузилась')
+						if (!isTokenUpdated) console.log('Ошибка, страница не перезагрузилась')
 					})
 					.catch(err => console.log(err))
 			} else if (
 				(error.status === 401 || error.status === 400) &&
 				window.location.pathname === '/account'
 			) {
-				// редирект на /auth
-				window.location.replace(`${PAGE.AUTH}`)
 				console.log('Ошибка 400/401')
+				redirect('/auth')
 			} else console.log('Ошибка Axios, но не 403')
 		} else console.log(`Ошибка: ${error}`)
 	}

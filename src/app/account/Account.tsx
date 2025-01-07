@@ -17,7 +17,8 @@ export function Account() {
 
 	if (isLoading) return <p>Данные загружаются...</p>
 
-	if (isError) return <p>{`Возникла ошибка.\nПожалуйста, перезагрузите страницу`}</p>
+	if (isError && user.password.length < 1)
+		return <p>{`Возникла ошибка.\nПожалуйста, перезагрузите страницу`}</p>
 
 	return (
 		<div className='border rounded-sm border-primary font-semibold text-3xl w-2/3 m-auto px-10 py-20'>

@@ -32,7 +32,6 @@ export default function Home() {
 	function eventClickHandlerLogout() {
 		mutate()
 		removeUserData()
-		window.location.reload()
 	}
 
 	return (
@@ -56,7 +55,7 @@ export default function Home() {
 			<button
 				className='text-3xl hover:text-4xl transition ml-12'
 				onClick={() => {
-					return user.password.length > 0 ? redirect('/account') : redirect('/auth')
+					return user.password.length > 0 ? redirect('/account') : router.push('/auth')
 				}}
 			>
 				В личный кабинет
