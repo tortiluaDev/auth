@@ -21,6 +21,12 @@ export interface IRefresh {
 	accessToken?: string
 }
 
+export interface IVerify {
+	message?: string
+	valid?: boolean
+	user?: IUser
+}
+
 export interface IPrivateRoute {
 	message: string
 	user?: {
@@ -29,4 +35,8 @@ export interface IPrivateRoute {
 		iat: string
 		exp: string
 	}
+}
+
+export interface IChangePassword {
+	message: string
 }

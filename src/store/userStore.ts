@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware'
 interface IUserStore {
 	user: IUser
 	setUser: (email: string, password: string) => void
+	setPassword: (password: string) => void
 	removeUser: () => void
 }
 
@@ -20,6 +21,7 @@ export const useUserStore = create<IUserStore>()(
 				password: ''
 			},
 			setUser: (email, password) => set({ user: { email, password } }),
+			setPassword: password => set(state => ({ user: { ...state.user, password } })),
 			removeUser: () => set({ user: { email: '', password: '' } })
 		}),
 		{

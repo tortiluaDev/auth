@@ -6,10 +6,12 @@ import axiosClassic from '@/api/axios'
 
 import {
 	IAuthResData,
+	IChangePassword,
 	ILogoutData,
 	IPrivateRoute,
 	IRefresh,
-	IUser
+	IUser,
+	IVerify
 } from '@/types/auth-service.types'
 
 class AuthService {
@@ -38,7 +40,7 @@ class AuthService {
 	}
 
 	async verify(accessToken: { token: string }) {
-		const response = await axiosClassic.post(`${PAGE.AUTH}/verify`, accessToken)
+		const response = await axiosClassic.post<IVerify>(`${PAGE.AUTH}/verify`, accessToken)
 
 		return response
 	}
@@ -51,6 +53,15 @@ class AuthService {
 
 	async privateRoute() {
 		const response = await axiosClassic.get<IPrivateRoute>('/protected-route')
+
+		return response
+	}
+
+	async changePassword(passwords: { oldPassword: string; newPassword: string }) {
+		const response = await axiosClassic.post<IChangePassword>(
+			`${PAGE.AUTH}/change-password`,
+			passwords
+		)
 
 		return response
 	}

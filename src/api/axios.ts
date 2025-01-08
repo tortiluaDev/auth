@@ -59,13 +59,10 @@ axiosClassic.interceptors.response.use(
 						if (!isTokenUpdated) console.log('Ошибка, страница не перезагрузилась')
 					})
 					.catch(err => console.log(err))
-			} else if (
-				(error.status === 401 || error.status === 400) &&
-				window.location.pathname === '/account'
-			) {
-				console.log('Ошибка 400/401')
+			} else if (error.status === 401 && window.location.pathname === '/account') {
+				console.log('Ошибка 401')
 				redirect('/auth')
-			} else console.log('Ошибка Axios, но не 403')
+			} else console.log('Ошибка Axios, но не 403 или 401 на /account')
 		} else console.log(`Ошибка: ${error}`)
 	}
 )
