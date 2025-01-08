@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { useAccessTokenStore } from '@/store/accessTokenStore'
@@ -8,33 +7,33 @@ import { useUserStore } from '@/store/userStore'
 
 import { notificationError, notificationSuccess } from '@/utils/toast'
 
-import { IAuthForm } from '../auth-form.types'
+import { IAuthForm } from '../app/auth/auth-form.types'
 
 import { authService } from '@/services/auth.service'
 
-import styles from '../auth-form.module.scss'
+import styles from '../app/auth/auth-form.module.scss'
 
-export function FormRegister() {
-	const [passwordsIsMatch, setPasswordsIsMatch] = useState(true)
+export function FormLogin() {
 	const router = useRouter()
 	const saveUserData = useUserStore(state => state.setUser)
 	const removeUserData = useUserStore(state => state.removeUser)
 	const saveAccessToken = useAccessTokenStore(state => state.saveToken)
-
-	const { register, handleSubmit, formState, reset, watch } = useForm<IAuthForm>({
+	const { register, handleSubmit, formState, reset } = useForm<IAuthForm>({
 		mode: 'onChange'
 	})
 
 	const { mutate, isPending } = useMutation({
-		mutationKey: ['register'],
-		mutationFn: async (user: IAuthForm) => authService.main('register', user, saveAccessToken),
+		mutationKey: ['login'],
+		mutationFn: async (user: IAuthForm) => authService.main('login', user, saveAccessToken),
 		onSuccess: () => {
-			router.push('/')
 			notificationSuccess('Вы успешно вошли!')
+			router.push('/')
 		},
-		onError: () => {
+		onError: error => {
 			removeUserData()
-			notificationError(`Ошибка: Пользователь уже существует`)
+			notificationError(
+				`Ошибка: ${error.message.includes('401') ? 'Неверные данные' : 'Попробуйте еще раз'}`
+			)
 		}
 	})
 
@@ -48,16 +47,8 @@ export function FormRegister() {
 		reset()
 	}
 
-	const passwordWatch = watch('password')
-	const confirmPasswordWatch = watch('confirmPassword')
 	const emailError = formState.errors.email?.message
 	const passwordError = formState.errors.password?.message
-	const confirmPasswordError = formState.errors.confirmPassword?.message
-
-	useEffect(() => {
-		if (confirmPasswordWatch === passwordWatch) setPasswordsIsMatch(true)
-		else setPasswordsIsMatch(false)
-	}, [confirmPasswordWatch, passwordWatch, passwordsIsMatch])
 
 	return (
 		<form
@@ -84,23 +75,14 @@ export function FormRegister() {
 				placeholder='Введите пароль'
 				{...register('password', { required: 'Это поле обязательно для заполнения' })}
 			/>
-			{confirmPasswordError && <p className={styles.error}>{confirmPasswordError}</p>}
-			{!passwordsIsMatch && <p className={styles.error}>Пароли не совпадают</p>}
-			<input
-				type='password'
-				className={styles.inp2}
-				placeholder='Повторите пароль'
-				{...register('confirmPassword', { required: 'Это поле обязательно для заполнения' })}
-			/>
-			{passwordsIsMatch && !isPending ? (
+			{!isPending ? (
 				<button type='submit'>Отправить</button>
 			) : (
 				<button
 					type='submit'
 					disabled
-					className='text-primaryActive transition'
 				>
-					Отправить
+					Загрузка...
 				</button>
 			)}
 		</form>

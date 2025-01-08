@@ -4,10 +4,10 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-import { PAGE } from '@/constants/pages.constants'
+import { FormLogin } from '@/components/FormLogin'
+import { FormRegister } from '@/components/FormRegister'
 
-import { FormLogin } from '@/app/auth/FormLogin'
-import { FormRegister } from '@/app/auth/register/FormRegister'
+import { PAGE } from '@/constants/pages.constants'
 
 import styles from './auth-form.module.scss'
 
